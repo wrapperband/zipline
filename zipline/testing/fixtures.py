@@ -467,7 +467,6 @@ class WithTradingEnvironment(WithAssetFinder,
     @classmethod
     def make_trading_environment(cls):
         return TradingEnvironment(
-            load=cls.make_load_function(),
             asset_db_path=cls.asset_finder.engine,
             trading_calendar=cls.trading_calendar,
         )

@@ -76,27 +76,12 @@ class TradingEnvironment(object):
 
     def __init__(
         self,
-        load=None,
-        bm_symbol='^GSPC',
-        exchange_tz="US/Eastern",
         trading_calendar=None,
         asset_db_path=':memory:'
     ):
 
-        self.bm_symbol = bm_symbol
-        if not load:
-            load = load_market_data
-
         if not trading_calendar:
             trading_calendar = get_calendar("NYSE")
-
-        self.benchmark_returns, self.treasury_curves = load(
-            trading_calendar.day,
-            trading_calendar.schedule.index,
-            self.bm_symbol,
-        )
-
-        self.exchange_tz = exchange_tz
 
         if isinstance(asset_db_path, string_types):
             asset_db_path = 'sqlite:///' + asset_db_path

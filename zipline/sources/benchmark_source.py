@@ -33,41 +33,22 @@ class BenchmarkSource(object):
 
         if len(sessions) == 0:
             self._precalculated_series = pd.Series()
-        elif self.benchmark_sid:
-            benchmark_asset = self.env.asset_finder.retrieve_asset(
-                self.benchmark_sid)
+        elif not self.benchmark_sid:
+            # TODO: Require benchmark_sid
+            self.benchmark_sid = 133
 
-            self._validate_benchmark(benchmark_asset)
+        benchmark_asset = self.env.asset_finder.retrieve_asset(
+            self.benchmark_sid)
 
-            self._precalculated_series = \
-                self._initialize_precalculated_series(
-                    benchmark_asset,
-                    trading_calendar,
-                    self.sessions,
-                    self.data_portal
-                )
-        else:
-            # get benchmark info from trading environment, which defaults to
-            # downloading data from Yahoo.
-            daily_series = \
-                env.benchmark_returns[sessions[0]:sessions[-1]]
+        self._validate_benchmark(benchmark_asset)
 
-            if self.emission_rate == "minute":
-                # we need to take the env's benchmark returns, which are daily,
-                # and resample them to minute
-                minutes = trading_calendar.minutes_for_sessions_in_range(
-                    sessions[0],
-                    sessions[-1]
-                )
-
-                minute_series = daily_series.reindex(
-                    index=minutes,
-                    method="ffill"
-                )
-
-                self._precalculated_series = minute_series
-            else:
-                self._precalculated_series = daily_series
+        self._precalculated_series = \
+            self._initialize_precalculated_series(
+                benchmark_asset,
+                trading_calendar,
+                self.sessions,
+                self.data_portal
+            )
 
     def get_value(self, dt):
         return self._precalculated_series.loc[dt]
