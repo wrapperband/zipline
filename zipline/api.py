@@ -31,6 +31,8 @@ from .utils.events import (
     time_rules
 )
 
+from zipline.assets.futures import ContinuousFuture
+
 __all__ = [
     'EODCancel',
     'FixedSlippage',
@@ -43,5 +45,6 @@ __all__ = [
     'execution',
     'math_utils',
     'slippage',
-    'time_rules'
+    'time_rules',
+    'ContinuousFuture',
 ]
